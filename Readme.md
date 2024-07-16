@@ -19,3 +19,7 @@ The application uses `json-server` to mock a backend server for storing movie da
 - **Html**
 - **css**
 - **js**
+### Usage
+-**Add Movie**: Click on "Add Movie" button to add a new movie. Fill out the form and click "Submit".
+-**Edit Movie**: Click on "Edit" button next to a movie to modify its details.
+-**Delete Movie**: Click on "Delete" button to remove a movie from the list.
