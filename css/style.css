@@ -1,0 +1,57 @@
+/* General styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Movie and Favourites list */
+#moviesList li,
+#favouritesList li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.poster {
+    max-width: 80px; /* Adjust max-width to control the size */
+    max-height: 120px; /* Adjust max-height to control the size */
+    width: auto;
+    height: auto;
+    margin-right: 10px;
+    flex-shrink: 0; /* Prevent image from shrinking */
+}
+
+.add-to-fav,
+.delete-from-fav {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 3px;
+}
+
+.add-to-fav:hover,
+.delete-from-fav:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+    }
+}
