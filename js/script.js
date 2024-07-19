@@ -1,6 +1,6 @@
 // Function to fetch movies from db.json
 function getMovies() {
-    return fetch('http://localhost:3000/movies')
+    return fetch('http://localhost:4000/movies')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -26,7 +26,7 @@ function getMovies() {
 
 // Function to fetch favourites from db.json
 function getFavourites() {
-    return fetch('http://localhost:3000/favourites')
+    return fetch('http://localhost:4000/favourites')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -36,12 +36,18 @@ function getFavourites() {
         .then(data => {
             const favouritesList = document.getElementById('favouritesList');
             favouritesList.innerHTML = ''; // Clear previous list
+            // Use a Set to keep track of unique movie ids
+            const addedMovies = new Set();
             data.forEach(favourite => {
-                favouritesList.innerHTML += `<li>
-                    <img src="images/${favourite.posterPath}" class="poster" alt="${favourite.title} Poster">
-                    <span>${favourite.title}</span>
-                    <button class="btn btn-danger delete-from-fav" data-id="${favourite.id}">Delete</button>
-                </li>`;
+                // Check if movie already added to list
+                if (!addedMovies.has(favourite.id)) {
+                    addedMovies.add(favourite.id);
+                    favouritesList.innerHTML += `<li>
+                        <img src="images/${favourite.posterPath}" class="poster" alt="${favourite.title} Poster">
+                        <span>${favourite.title}</span>
+                        <button class="btn btn-danger delete-from-fav" data-id="${favourite.id}">Delete</button>
+                    </li>`;
+                }
             });
             return data; // Return the JSON response
         })
@@ -50,10 +56,18 @@ function getFavourites() {
         });
 }
 
+
 // Function to add a movie to favourites
 function addFavourite(movieId) {
-    // Find the movie in movies list by id
-    fetch(`http://localhost:3000/movies/${movieId}`)
+    // Check if movie with movieId already exists in favourites
+    fetch(`http://localhost:4000/favourites/${movieId}`)
+        .then(response => {
+            if (!response.ok) {
+                // If movie doesn't exist, add it to favourites
+                return fetch(`http://localhost:4000/movies/${movieId}`);
+            }
+            throw new Error('Movie already exists in favourites');
+        })
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -62,7 +76,7 @@ function addFavourite(movieId) {
         })
         .then(movie => {
             // Post movie to favourites collection in db.json
-            return fetch('http://localhost:3000/favourites', {
+            return fetch('http://localhost:4000/favourites', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -78,17 +92,16 @@ function addFavourite(movieId) {
         })
         .then(data => {
             // Reload favourites list after addition
-            getFavourites(); // Alternatively, update the DOM without reloading
+            getFavourites();
         })
         .catch(error => {
             console.error('Error adding favourite:', error);
         });
 }
-
 // Function to delete a favourite movie
 function deleteFavourite(movieId) {
     // Delete the movie from favourites collection in db.json
-    return fetch(`http://localhost:3000/favourites/${movieId}`, {
+    return fetch(`http://localhost:4000/favourites/${movieId}`, {
         method: 'DELETE',
     })
     .then(response => {
